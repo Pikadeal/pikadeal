@@ -58,7 +58,7 @@ const traductions: Record<string, string> = {
   "fouinette": "sentret", "fouinar": "furret", "hoothoot": "hoothoot", "noctowl": "noctowl",
   "lumivole": "ledyba", "coxy": "ledian", "spinarak": "spinarak", "migalos": "ariados",
   "nostenfer": "crobat", "loupio": "chinchou", "lanturn": "lanturn",
-  "pichu": "pichu", "mélodelfe": "cleffa", "toudoudou": "igglybuff",
+"pichu": "pichu", "toudoudou": "igglybuff",
   "togepi": "togepi", "togetic": "togetic",
   "natu": "natu", "xatu": "xatu",
   "floravol": "hoppip", "joliflor": "skiploom", "cotovol": "jumpluff",
