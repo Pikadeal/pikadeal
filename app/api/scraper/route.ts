@@ -23,7 +23,6 @@ export async function GET() {
         for (const annonce of annoncesVinted) {
           resultats.push({ carte, annonce, plateforme: 'Vinted' })
 
-          // Vérifier si cette annonce a déjà été envoyée
           const { data: dejaEnvoyee } = await supabase
             .from('alertes_envoyees')
             .select('id')
@@ -35,7 +34,6 @@ export async function GET() {
             continue
           }
 
-          // Récupérer l'email de l'utilisateur
           try {
             const user = await client.users.getUser(carte.user_id)
             const email = user.emailAddresses[0]?.emailAddress
@@ -45,7 +43,6 @@ export async function GET() {
               emailsEnvoyes++
               console.log(`Email envoyé à ${email} pour ${carte.nom}`)
 
-              // Enregistrer comme envoyée
               await supabase.from('alertes_envoyees').insert({
                 carte_id: carte.id,
                 annonce_url: annonce.url,
@@ -72,7 +69,7 @@ export async function GET() {
 
 async function scraperVinted(nom: string, prixMax: number) {
   try {
-    const url = `https://vinted-api3.p.rapidapi.com/search?query=${encodeURIComponent(nom)}`
+    const url = `https://vinted-api3.p.rapidapi.com/search?query=${encodeURIComponent(nom + ' carte pokemon')}`
 
     const res = await fetch(url, {
       headers: {
@@ -84,11 +81,15 @@ async function scraperVinted(nom: string, prixMax: number) {
 
     const data = await res.json()
     const items = data.items || data.data || data.results || []
+    const nomLower = nom.toLowerCase()
 
     return items
       .filter((item: any) => {
         const prix = item.price?.amount || item.price
-        return prix && parseFloat(prix) <= prixMax
+        const titre = (item.title || item.name || '').toLowerCase()
+        const contientLeNom = titre.includes(nomLower)
+        const pasUnAccessoire = !titre.includes('porte') && !titre.includes('peluche') && !titre.includes('figurine') && !titre.includes('keychain') && !titre.includes('plush') && !titre.includes('figure') && !titre.includes('sac') && !titre.includes('vetement') && !titre.includes('t-shirt') && !titre.includes('mug')
+        return prix && parseFloat(prix) <= prixMax && contientLeNom && pasUnAccessoire
       })
       .slice(0, 3)
       .map((item: any) => ({

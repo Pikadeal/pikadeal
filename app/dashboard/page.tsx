@@ -1,198 +1,149 @@
-'use client'
+﻿'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useUser } from '@clerk/nextjs'
-import { useRouter } from 'next/navigation'
-import { traduire } from '@/lib/traductions'
 
-export default function AjouterCarte() {
+export default function Dashboard() {
   const { user } = useUser()
-  const router = useRouter()
-  const [nom, setNom] = useState('')
-  const [prixMax, setPrixMax] = useState('')
-  const [etat, setEtat] = useState('Near Mint')
-  const [vinted, setVinted] = useState(true)
-  const [ebay, setEbay] = useState(true)
-  const [langue, setLangue] = useState('FR')
-  const [loading, setLoading] = useState(false)
-  const [recherche, setRecherche] = useState([])
-  const [carteSelectionnee, setCarteSelectionnee] = useState<any>(null)
-  const [recherching, setRecherching] = useState(false)
+  const [cartes, setCartes] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  async function rechercherCarte(query: string) {
-    setNom(query)
-    if (query.length < 3) {
-      setRecherche([])
-      return
-    }
-    setRecherching(true)
-    try {
-      const nomTraduit = traduire(query)
-      const res = await fetch(`https://api.pokemontcg.io/v2/cards?q=name:${nomTraduit}*&pageSize=6`)
-      const data = await res.json()
-      setRecherche(data.data || [])
-    } catch (e) {
-      console.log('Erreur recherche:', e)
-    }
-    setRecherching(false)
+  useEffect(() => {
+    if (user) fetchCartes()
+  }, [user])
+
+  async function fetchCartes() {
+    const { data } = await supabase
+      .from('cartes')
+      .select('*')
+      .eq('user_id', user?.id)
+    setCartes(data || [])
+    setLoading(false)
   }
 
-  function selectionnerCarte(carte: any) {
-    setCarteSelectionnee(carte)
-    setRecherche([])
+  async function toggleActif(id, actif) {
+    await supabase.from('cartes').update({ actif: !actif }).eq('id', id)
+    fetchCartes()
   }
 
-  async function ajouterCarte() {
-    if (!nom || !prixMax) return
-    setLoading(true)
+  async function supprimerCarte(id) {
+    await supabase.from('cartes').delete().eq('id', id)
+    fetchCartes()
+  }
 
-    const { error } = await supabase.from('cartes').insert({
-      user_id: user?.id,
-      nom,
-      prix_max: parseInt(prixMax),
-      etat,
-      vinted,
-      ebay,
-      langue,
-      actif: true,
-      image_url: carteSelectionnee?.images?.small || null,
-      set_name: carteSelectionnee?.set?.name || null,
-    })
-
-    if (error) {
-      console.log('Erreur:', error.message)
-      setLoading(false)
-      return
-    }
-
-    router.push('/dashboard')
+  async function passerPremium() {
+    const res = await fetch('/api/checkout', { method: 'POST' })
+    const data = await res.json()
+    if (data.url) window.location.href = data.url
   }
 
   return (
     <main className="min-h-screen bg-white">
 
-      <div className="px-8 py-6 border-b border-gray-100 flex items-center gap-4">
-        <a href="/dashboard" className="text-gray-400 hover:text-gray-600">← Retour</a>
+      <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Ajouter une carte</h1>
-          <p className="text-gray-400 text-sm mt-1">Configure ton alerte en quelques secondes</p>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Bonjour {user?.firstName} ⚡
+          </h1>
+          <p className="text-gray-400 text-sm mt-1">Voici tes cartes surveillées</p>
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={passerPremium}
+            className="px-4 py-2 border border-amber-400 text-amber-700 text-sm font-medium rounded-lg hover:bg-amber-50"
+          >
+            ⭐ Passer Premium
+          </button>
+          <a href="/dashboard/ajouter" className="px-4 py-2 bg-amber-400 text-amber-900 text-sm font-medium rounded-lg hover:bg-amber-500">
+            + Ajouter une carte
+          </a>
         </div>
       </div>
 
-      <div className="px-8 py-8 max-w-lg">
-
-        <div className="mb-6 relative">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Recherche une carte</label>
-          <input
-            type="text"
-            placeholder="Ex : Dracaufeu, Charizard, Mewtwo..."
-            value={nom}
-            onChange={(e) => rechercherCarte(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-amber-400"
-          />
-          {recherche.length > 0 && (
-            <div className="absolute z-10 w-full bg-white border border-gray-200 rounded-xl shadow-lg mt-2 overflow-hidden">
-              {recherche.map((carte: any) => (
-                <div
-                  key={carte.id}
-                  onClick={() => selectionnerCarte(carte)}
-                  className="flex items-center gap-3 px-4 py-3 hover:bg-amber-50 cursor-pointer border-b border-gray-100 last:border-0"
-                >
-                  <img src={carte.images.small} alt={carte.name} className="w-10 h-14 object-contain rounded" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{carte.name}</p>
-                    <p className="text-xs text-gray-400">{carte.set.name}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          {recherching && <p className="text-xs text-gray-400 mt-2">Recherche en cours...</p>}
+      <div className="px-8 py-6 grid grid-cols-3 gap-4 max-w-2xl">
+        <div className="bg-amber-50 rounded-xl p-4">
+          <p className="text-xs text-amber-700 mb-1">Cartes surveillées</p>
+          <p className="text-2xl font-bold text-amber-900">{cartes.length}</p>
         </div>
+        <div className="bg-green-50 rounded-xl p-4">
+          <p className="text-xs text-green-700 mb-1">Alertes ce mois</p>
+          <p className="text-2xl font-bold text-green-900">0</p>
+        </div>
+        <div className="bg-blue-50 rounded-xl p-4">
+          <p className="text-xs text-blue-700 mb-1">Economies détectées</p>
+          <p className="text-2xl font-bold text-blue-900">0€</p>
+        </div>
+      </div>
 
-        {carteSelectionnee && (
-          <div className="mb-6 flex items-center gap-4 p-4 bg-amber-50 rounded-xl border-2 border-amber-400">
-            <img src={carteSelectionnee.images.small} alt={carteSelectionnee.name} className="w-16 object-contain rounded-lg" />
-            <div>
-              <p className="font-semibold text-amber-900">{nom}</p>
-              <p className="text-sm text-amber-700">{carteSelectionnee.set.name}</p>
-              <p className="text-xs text-amber-600 mt-1">✓ Carte selectionnee</p>
-            </div>
+      <div className="px-8 py-4">
+
+        {loading && <p className="text-gray-400 text-sm">Chargement...</p>}
+
+        {!loading && cartes.length === 0 && (
+          <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-xl">
+            <p className="text-4xl mb-3">🎴</p>
+            <p className="text-gray-500 font-medium mb-1">Aucune carte surveillée</p>
+            <p className="text-gray-400 text-sm mb-4">Ajoute ta première carte pour commencer</p>
+            <a href="/dashboard/ajouter" className="px-4 py-2 bg-amber-400 text-amber-900 text-sm font-medium rounded-lg hover:bg-amber-500">
+              Ajouter une carte
+            </a>
           </div>
         )}
 
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Prix maximum accepte</label>
-          <div className="relative">
-            <input
-              type="number"
-              placeholder="Ex : 80"
-              value={prixMax}
-              onChange={(e) => setPrixMax(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-amber-400"
-            />
-            <span className="absolute right-4 top-3.5 text-gray-400">€</span>
-          </div>
-        </div>
+        {!loading && cartes.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {cartes.map((carte) => (
+              <div key={carte.id} className={`flex gap-4 p-4 border rounded-xl ${carte.actif ? 'border-gray-100' : 'border-gray-100 opacity-50'}`}>
+                
+                {carte.image_url ? (
+                  <img src={carte.image_url} alt={carte.nom} className="w-16 h-22 object-contain rounded-lg flex-shrink-0" />
+                ) : (
+                  <div className="w-16 h-22 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0 text-2xl">
+                    🎴
+                  </div>
+                )}
 
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Etat minimum</label>
-          <select
-            value={etat}
-            onChange={(e) => setEtat(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-amber-400"
-          >
-            <option>Mint</option>
-            <option>Near Mint</option>
-            <option>Excellent</option>
-            <option>Good</option>
-            <option>Peu importe</option>
-          </select>
-        </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex justify-between items-start mb-1">
+                    <p className="font-semibold text-gray-900 truncate">{carte.nom}</p>
+                    <span className="text-xs ml-2 flex-shrink-0">
+                      {carte.langue === 'FR' ? '🇫🇷' : carte.langue === 'EN' ? '🇬🇧' : '🇯🇵'}
+                    </span>
+                  </div>
+                  {carte.set_name && <p className="text-xs text-gray-400 mb-2">{carte.set_name}</p>}
+                  <p className="text-sm text-gray-500 mb-3">Prix max : <span className="font-medium text-gray-900">{carte.prix_max}€</span></p>
+                  
+                  <div className="flex gap-2 flex-wrap mb-3">
+                    {carte.vinted && <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Vinted</span>}
+                    {carte.ebay && <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">eBay</span>}
+                    <span className={`text-xs px-2 py-1 rounded-full ${carte.actif ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-500'}`}>
+                      {carte.actif ? '● Actif' : '● Pausé'}
+                    </span>
+                  </div>
 
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-3">Version de la carte</label>
-          <div className="flex gap-3">
-            {['FR', 'EN', 'JP'].map((l) => (
-              <button
-                key={l}
-                onClick={() => setLangue(l)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium border-2 transition-colors ${langue === l ? 'border-amber-400 bg-amber-50 text-amber-900' : 'border-gray-200 text-gray-400'}`}
-              >
-                {l === 'FR' ? '🇫🇷 Français' : l === 'EN' ? '🇬🇧 Anglais' : '🇯🇵 Japonais'}
-              </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => toggleActif(carte.id, carte.actif)}
+                      className="text-xs px-3 py-1.5 border border-gray-200 rounded-lg text-gray-500 hover:bg-gray-50"
+                    >
+                      {carte.actif ? 'Mettre en pause' : 'Réactiver'}
+                    </button>
+                    <button
+                      onClick={() => supprimerCarte(carte.id)}
+                      className="text-xs px-3 py-1.5 border border-red-100 rounded-lg text-red-400 hover:bg-red-50"
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                </div>
+
+              </div>
             ))}
           </div>
-        </div>
-
-        <div className="mb-8">
-          <label className="block text-sm font-medium text-gray-700 mb-3">Plateformes a surveiller</label>
-          <div className="flex gap-3">
-            <button
-              onClick={() => setVinted(!vinted)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium border-2 transition-colors ${vinted ? 'border-amber-400 bg-amber-50 text-amber-900' : 'border-gray-200 text-gray-400'}`}
-            >
-              Vinted
-            </button>
-            <button
-              onClick={() => setEbay(!ebay)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium border-2 transition-colors ${ebay ? 'border-amber-400 bg-amber-50 text-amber-900' : 'border-gray-200 text-gray-400'}`}
-            >
-              eBay
-            </button>
-          </div>
-        </div>
-
-        <button
-          onClick={ajouterCarte}
-          disabled={loading || !nom || !prixMax}
-          className="w-full py-3 bg-amber-400 text-amber-900 font-semibold rounded-xl hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? 'Ajout en cours...' : 'Creer lalerte ⚡'}
-        </button>
-
+        )}
       </div>
+
     </main>
   )
 }
