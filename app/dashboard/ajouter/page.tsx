@@ -6,7 +6,7 @@ import { useUser } from '@clerk/nextjs'
 
 export default function Dashboard() {
   const { user } = useUser()
-  const [cartes, setCartes] = useState([])
+  const [cartes, setCartes] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
