@@ -4,7 +4,16 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'PikaDeal — Ne rate plus jamais une bonne affaire Pokemon',
-  description: 'PikaDeal surveille Vinted et eBay 24h/24',
+  description: 'PikaDeal surveille Vinted et eBay 24h/24 et t\'envoie un email des qu\'une carte Pokemon de ta liste apparait sous le prix Cardmarket. Alertes automatiques, toutes les cartes FR/EN/JP.',
+  keywords: 'carte pokemon, vinted pokemon, ebay pokemon, alerte carte pokemon, bonne affaire pokemon, dracaufeu, pikachu, mewtwo',
+  openGraph: {
+    title: 'PikaDeal — Alertes cartes Pokemon',
+    description: 'Ne rate plus jamais une bonne affaire sur Vinted et eBay',
+    url: 'https://pikadeal.vercel.app',
+    siteName: 'PikaDeal',
+    locale: 'fr_FR',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({
