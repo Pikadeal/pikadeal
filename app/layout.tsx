@@ -14,7 +14,10 @@ export const metadata: Metadata = {
     locale: 'fr_FR',
     type: 'website',
   },
-}
+}verification: {
+  google: '<meta name="google-site-verification" content="dN1CueH4CdEqT-Ksy2AFJYhuVTefQzK0wjiBjk027M8" />
+',
+},
 
 export default function RootLayout({
   children,
