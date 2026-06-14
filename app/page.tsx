@@ -2,10 +2,15 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white font-sans">
 
+      {/* BANNIERE BETA */}
+      <div className="bg-amber-400 text-amber-900 text-center py-2 px-4 text-sm font-medium">
+        PikaDeal est actuellement en version beta. Le site ne cesse d'evoluer et de s'ameliorer. N'hesitez pas a vous inscrire ou a vous abonner pour soutenir le projet !
+      </div>
+
       {/* NAV */}
       <nav className="flex items-center px-8 py-4 border-b border-gray-100">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-amber-400 rounded-full flex items-center justify-center text-amber-900 font-bold text-sm">⚡</div>
+          <div className="w-8 h-8 bg-amber-400 rounded-full flex items-center justify-center text-amber-900 font-bold text-sm">P</div>
           <span className="font-semibold text-gray-900 text-lg">PikaDeal</span>
         </div>
       </nav>
@@ -14,7 +19,7 @@ export default function Home() {
       <section className="text-center py-20 px-8 bg-amber-50">
         <span className="inline-block bg-amber-100 text-amber-800 text-xs font-medium px-3 py-1 rounded-full mb-6">Vinted · eBay · Cardmarket</span>
         <h1 className="text-4xl font-bold text-gray-900 mb-4 leading-tight">
-          Ne rate plus jamais<br />une bonne affaire Pokémon
+          Ne rate plus jamais<br />une bonne affaire Pokemon
         </h1>
         <p className="text-gray-500 text-lg mb-8 max-w-lg mx-auto">
           PikaDeal surveille Vinted et eBay 24h/24 et t'envoie un email quand une carte de ta liste apparait sous le prix Cardmarket.
@@ -52,7 +57,7 @@ export default function Home() {
           <p className="text-center text-gray-500 mb-8">Un email clair, direct, avec tout ce qu'il faut pour decider vite.</p>
           <div className="bg-white rounded-xl border-l-4 border-amber-400 border border-gray-100 p-5 shadow-sm">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 bg-amber-100 rounded-lg flex items-center justify-center text-lg">⚡</div>
+              <div className="w-9 h-9 bg-amber-100 rounded-lg flex items-center justify-center text-lg">P</div>
               <div>
                 <p className="text-sm font-medium text-gray-900">PikaDeal — Alerte carte trouvee</p>
                 <p className="text-xs text-gray-400">alerte@pikadeal.fr · il y a 2 min</p>
@@ -62,15 +67,15 @@ export default function Home() {
             <div className="grid grid-cols-3 gap-3 mb-4">
               <div className="bg-gray-50 rounded-lg p-3 text-center">
                 <p className="text-xs text-gray-400">Prix annonce</p>
-                <p className="font-semibold text-gray-900">38€</p>
+                <p className="font-semibold text-gray-900">38 EUR</p>
               </div>
               <div className="bg-gray-50 rounded-lg p-3 text-center">
                 <p className="text-xs text-gray-400">Cardmarket</p>
-                <p className="font-semibold text-gray-900">120€</p>
+                <p className="font-semibold text-gray-900">120 EUR</p>
               </div>
               <div className="bg-green-50 rounded-lg p-3 text-center">
                 <p className="text-xs text-green-600">Economie</p>
-                <p className="font-semibold text-green-700">82€</p>
+                <p className="font-semibold text-green-700">82 EUR</p>
               </div>
             </div>
             <div className="flex justify-between items-center">
@@ -91,22 +96,22 @@ export default function Home() {
         <div className="grid grid-cols-2 gap-6">
           <div className="border border-gray-100 rounded-xl p-6 shadow-sm">
             <p className="font-semibold text-gray-900 mb-1">Gratuit</p>
-            <p className="text-3xl font-bold text-gray-900 mb-4">0€<span className="text-sm font-normal text-gray-400">/mois</span></p>
+            <p className="text-3xl font-bold text-gray-900 mb-4">0 EUR<span className="text-sm font-normal text-gray-400">/mois</span></p>
             <ul className="text-sm text-gray-500 space-y-2">
-              <li>✓ 5 cartes surveillees</li>
-              <li>✓ Alertes toutes les heures</li>
-              <li>✓ Vinted uniquement</li>
+              <li>5 cartes surveillees</li>
+              <li>Alertes toutes les heures</li>
+              <li>Vinted uniquement</li>
             </ul>
           </div>
           <div className="border-2 border-amber-400 rounded-xl p-6 shadow-sm relative">
             <span className="absolute -top-3 left-4 bg-amber-400 text-amber-900 text-xs font-medium px-3 py-1 rounded-full">Recommande</span>
             <p className="font-semibold text-gray-900 mb-1">Premium</p>
-            <p className="text-3xl font-bold text-gray-900 mb-4">9€<span className="text-sm font-normal text-gray-400">/mois</span></p>
+            <p className="text-3xl font-bold text-gray-900 mb-4">9 EUR<span className="text-sm font-normal text-gray-400">/mois</span></p>
             <ul className="text-sm text-gray-500 space-y-2">
-              <li>✓ Cartes illimitees</li>
-              <li>✓ Alertes temps reel</li>
-              <li>✓ Vinted + eBay</li>
-              <li>✓ Score de deal Cardmarket</li>
+              <li>Cartes illimitees</li>
+              <li>Alertes temps reel</li>
+              <li>Vinted + eBay</li>
+              <li>Score de deal Cardmarket</li>
             </ul>
           </div>
         </div>
