@@ -864,3 +864,29 @@ export function traduire(nom: string): string {
   const nomLower = nom.toLowerCase().trim()
   return traductions[nomLower] || nom
 }
+const traductionsSets: Record<string, string> = {
+"base set": "Base",
+"set de base": "Base",
+"base": "Base",
+  "jungle": "Jungle",
+  "fossil": "Fossil",
+  "fossile": "Fossil",
+  "team rocket": "Team Rocket",
+  "gym heroes": "Gym Heroes",
+  "gym challenge": "Gym Challenge",
+  "neo genesis": "Neo Genesis",
+  "neo discovery": "Neo Discovery",
+  "neo revelation": "Neo Revelation",
+  "neo destiny": "Neo Destiny",
+  "ex ruby sapphire": "EX Ruby & Sapphire",
+  "diamant perle": "Diamond & Pearl",
+  "heartgold soulsilver": "HeartGold & SoulSilver",
+  "noir blanc": "Black & White",
+  "epee bouclier": "Sword & Shield",
+  "ecarlate violet": "Scarlet & Violet",
+}
+
+export function traduireSet(set: string): string {
+  const setLower = set.toLowerCase().trim()
+  return traductionsSets[setLower] || set
+}

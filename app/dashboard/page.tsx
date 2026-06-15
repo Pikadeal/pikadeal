@@ -40,7 +40,6 @@ export default function Dashboard() {
 
   return (
     <main className="min-h-screen bg-white">
-
       <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
@@ -77,7 +76,6 @@ export default function Dashboard() {
       </div>
 
       <div className="px-8 py-4">
-
         {loading && <p className="text-gray-400 text-sm">Chargement...</p>}
 
         {!loading && cartes.length === 0 && (
@@ -93,26 +91,21 @@ export default function Dashboard() {
         {!loading && cartes.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {cartes.map((carte: any) => (
-              <div key={carte.id} className={`flex gap-4 p-4 border rounded-xl ${carte.actif ? 'border-gray-100' : 'border-gray-100 opacity-50'}`}>
-                
+              <div key={carte.id} className="flex gap-4 p-4 border border-gray-100 rounded-xl">
                 {carte.image_url ? (
-                  <img src={carte.image_url} alt={carte.nom} className="w-16 h-22 object-contain rounded-lg flex-shrink-0" />
+                  <img src={carte.image_url} alt={carte.nom} className="w-16 object-contain rounded-lg flex-shrink-0" />
                 ) : (
-                  <div className="w-16 h-22 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0 text-2xl">
+                  <div className="w-16 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0 text-2xl p-4">
                     ?
                   </div>
                 )}
-
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-start mb-1">
                     <p className="font-semibold text-gray-900 truncate">{carte.nom}</p>
-                    <span className="text-xs ml-2 flex-shrink-0">
-                      {carte.langue}
-                    </span>
+                    <span className="text-xs ml-2 flex-shrink-0">{carte.langue}</span>
                   </div>
                   {carte.set_name && <p className="text-xs text-gray-400 mb-2">{carte.set_name}</p>}
                   <p className="text-sm text-gray-500 mb-3">Prix max : <span className="font-medium text-gray-900">{carte.prix_max} EUR</span></p>
-                  
                   <div className="flex gap-2 flex-wrap mb-3">
                     {carte.vinted && <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Vinted</span>}
                     {carte.ebay && <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">eBay</span>}
@@ -120,7 +113,6 @@ export default function Dashboard() {
                       {carte.actif ? 'Actif' : 'Pause'}
                     </span>
                   </div>
-
                   <div className="flex gap-2">
                     <button
                       onClick={() => toggleActif(carte.id, carte.actif)}
@@ -136,13 +128,11 @@ export default function Dashboard() {
                     </button>
                   </div>
                 </div>
-
               </div>
             ))}
           </div>
         )}
       </div>
-
     </main>
   )
 }
