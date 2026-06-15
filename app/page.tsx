@@ -120,9 +120,10 @@ export default function Home() {
       {/* FOOTER */}
       <footer className="text-center py-8 border-t border-gray-100 text-gray-400 text-sm">
         <div className="flex justify-center gap-6 mb-3">
-          <a href="/contact" className="hover:text-gray-600">Contact</a>
-          <a href="/dashboard" className="hover:text-gray-600">Mon compte</a>
-        </div>
+  <a href="/contact" className="hover:text-gray-600">Contact</a>
+  <a href="/cgu" className="hover:text-gray-600">CGU</a>
+  <a href="/dashboard" className="hover:text-gray-600">Mon compte</a>
+</div>
         2025 PikaDeal — Fait avec amour pour les dresseurs
       </footer>
 
