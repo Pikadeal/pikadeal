@@ -50,9 +50,21 @@ export default function AjouterCarte() {
     setRecherche([])
   }
 
-  async function ajouterCarte() {
-    if (!nom || !prixMax) return
-    setLoading(true)
+async function ajouterCarte() {
+  if (!nom || !prixMax) return
+  setLoading(true)
+
+  // Verifier la limite gratuite
+  const { count } = await supabase
+    .from('cartes')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user?.id)
+
+  if (count !== null && count >= 5) {
+    alert('Tu as atteint la limite de 5 cartes du plan gratuit. Passe Premium pour ajouter des cartes illimitees !')
+    setLoading(false)
+    return
+  }
 
     const { error } = await supabase.from('cartes').insert({
       user_id: user?.id,
