@@ -19,6 +19,7 @@ export default function AjouterCarte() {
   const [recherche, setRecherche] = useState<any[]>([])
   const [carteSelectionnee, setCarteSelectionnee] = useState<any>(null)
   const [recherching, setRecherching] = useState(false)
+  const [erreur, setErreur] = useState('')
 
   async function rechercherCarte(query: string) {
     setNom(query)
@@ -50,21 +51,21 @@ export default function AjouterCarte() {
     setRecherche([])
   }
 
-async function ajouterCarte() {
-  if (!nom || !prixMax) return
-  setLoading(true)
+  async function ajouterCarte() {
+    if (!nom || !prixMax) return
+    setLoading(true)
+    setErreur('')
 
-  // Verifier la limite gratuite
-  const { count } = await supabase
-    .from('cartes')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', user?.id)
+    const { count } = await supabase
+      .from('cartes')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user?.id)
 
-  if (count !== null && count >= 5) {
-    alert('Tu as atteint la limite de 5 cartes du plan gratuit. Passe Premium pour ajouter des cartes illimitees !')
-    setLoading(false)
-    return
-  }
+    if (count !== null && count >= 5) {
+      setErreur('limite')
+      setLoading(false)
+      return
+    }
 
     const { error } = await supabase.from('cartes').insert({
       user_id: user?.id,
@@ -100,6 +101,23 @@ async function ajouterCarte() {
       </div>
 
       <div className="px-8 py-8 max-w-lg">
+
+        {erreur === 'limite' && (
+          <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+            <p className="font-semibold text-amber-900 mb-1">Limite de 5 cartes atteinte</p>
+            <p className="text-sm text-amber-700 mb-3">Passe Premium pour surveiller des cartes illimitees sur Vinted et eBay !</p>
+            <button
+              onClick={async () => {
+                const res = await fetch('/api/checkout', { method: 'POST' })
+                const data = await res.json()
+                if (data.url) window.location.href = data.url
+              }}
+              className="px-4 py-2 bg-amber-400 text-amber-900 text-sm font-medium rounded-lg hover:bg-amber-500"
+            >
+              Passer Premium — 9 EUR/mois
+            </button>
+          </div>
+        )}
 
         <div className="mb-6 relative">
           <label className="block text-sm font-medium text-gray-700 mb-2">Recherche une carte</label>
