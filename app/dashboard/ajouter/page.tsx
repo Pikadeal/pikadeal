@@ -56,15 +56,25 @@ export default function AjouterCarte() {
     setLoading(true)
     setErreur('')
 
-    const { count } = await supabase
-      .from('cartes')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', user?.id)
+    const { data: userData } = await supabase
+      .from('users')
+      .select('premium')
+      .eq('id', user?.id)
+      .maybeSingle()
 
-    if (count !== null && count >= 5) {
-      setErreur('limite')
-      setLoading(false)
-      return
+    const isPremium = userData?.premium || false
+
+    if (!isPremium) {
+      const { count } = await supabase
+        .from('cartes')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user?.id)
+
+      if (count !== null && count >= 5) {
+        setErreur('limite')
+        setLoading(false)
+        return
+      }
     }
 
     const { error } = await supabase.from('cartes').insert({
