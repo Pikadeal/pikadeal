@@ -1,17 +1,23 @@
 ﻿'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useUser } from '@clerk/nextjs'
 
-export default function Dashboard() {
-  const { user } = useUser()
+function DashboardContent() {
+  const { user, isLoaded } = useUser()
   const [cartes, setCartes] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [isPremium, setIsPremium] = useState(false)
 
   useEffect(() => {
-    if (user) fetchCartes()
-  }, [user])
+    if (isLoaded && user) {
+      fetchCartes()
+      fetchPremium()
+    } else if (isLoaded && !user) {
+      setLoading(false)
+    }
+  }, [isLoaded, user])
 
   async function fetchCartes() {
     const { data } = await supabase
@@ -20,6 +26,12 @@ export default function Dashboard() {
       .eq('user_id', user?.id)
     setCartes(data || [])
     setLoading(false)
+  }
+
+  async function fetchPremium() {
+    const res = await fetch('/api/premium')
+    const data = await res.json()
+    setIsPremium(data?.premium || false)
   }
 
   async function toggleActif(id: string, actif: boolean) {
@@ -38,22 +50,51 @@ export default function Dashboard() {
     if (data.url) window.location.href = data.url
   }
 
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <p className="text-gray-400">Chargement...</p>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-500 mb-4">Tu dois etre connecte pour acceder au dashboard</p>
+          <a href="/" className="px-4 py-2 bg-amber-400 text-amber-900 rounded-lg">Retour a l'accueil</a>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <main className="min-h-screen bg-white">
+
       <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Bonjour {user?.firstName}
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-gray-900">
+              Bonjour {user?.firstName}
+            </h1>
+            {isPremium && (
+              <span className="bg-amber-400 text-amber-900 text-xs font-bold px-2 py-1 rounded-full">
+                PREMIUM
+              </span>
+            )}
+          </div>
           <p className="text-gray-400 text-sm mt-1">Voici tes cartes surveillees</p>
         </div>
         <div className="flex gap-2">
-          <button
-            onClick={passerPremium}
-            className="px-4 py-2 border border-amber-400 text-amber-700 text-sm font-medium rounded-lg hover:bg-amber-50"
-          >
-            Passer Premium
-          </button>
+          {!isPremium && (
+            <button
+              onClick={passerPremium}
+              className="px-4 py-2 border border-amber-400 text-amber-700 text-sm font-medium rounded-lg hover:bg-amber-50"
+            >
+              Passer Premium
+            </button>
+          )}
           <a href="/dashboard/ajouter" className="px-4 py-2 bg-amber-400 text-amber-900 text-sm font-medium rounded-lg hover:bg-amber-500">
             + Ajouter une carte
           </a>
@@ -76,6 +117,7 @@ export default function Dashboard() {
       </div>
 
       <div className="px-8 py-4">
+
         {loading && <p className="text-gray-400 text-sm">Chargement...</p>}
 
         {!loading && cartes.length === 0 && (
@@ -133,6 +175,15 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+
     </main>
+  )
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center"><p className="text-gray-400">Chargement...</p></div>}>
+      <DashboardContent />
+    </Suspense>
   )
 }
