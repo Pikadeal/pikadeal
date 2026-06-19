@@ -124,7 +124,7 @@ export default function AjouterCarte() {
               }}
               className="px-4 py-2 bg-amber-400 text-amber-900 text-sm font-medium rounded-lg hover:bg-amber-500"
             >
-              Passer Premium — 9 EUR/mois
+              Passer Premium — 4,99 EUR/mois
             </button>
           </div>
         )}
