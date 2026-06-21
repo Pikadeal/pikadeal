@@ -30,6 +30,13 @@ export default function Home() {
         </div>
       </section>
 
+      {/* INTRO SEO */}
+      <section className="py-12 px-8 max-w-3xl mx-auto">
+        <p className="text-gray-600 leading-relaxed">
+          Trouver une carte Pokemon rare a un bon prix sur Vinted ou eBay demande souvent des heures de recherche quotidienne. Les meilleures affaires partent en quelques minutes, et il est impossible de surveiller manuellement toutes les nouvelles annonces. PikaDeal automatise cette surveillance pour vous : notre systeme analyse en continu les annonces de cartes Pokemon publiees sur Vinted et eBay, compare leur prix au prix de reference Cardmarket, et vous envoie une alerte par email des qu'une bonne affaire correspondant a vos criteres apparait. Que vous cherchiez un Dracaufeu Base Set, un Pikachu Illustrator ou une carte plus recente, PikaDeal vous fait gagner un temps precieux dans votre quete de collectionneur.
+        </p>
+      </section>
+
       {/* FEATURES */}
       <section className="py-16 px-8 max-w-4xl mx-auto">
         <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">Tout ce que fait PikaDeal</h2>
@@ -50,8 +57,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ALERTE EMAIL */}
+      {/* COMMENT CA MARCHE */}
       <section className="py-16 px-8 bg-gray-50">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">Comment fonctionne PikaDeal</h2>
+          <p className="text-center text-gray-500 mb-10">Trois etapes simples pour ne plus jamais rater une bonne affaire.</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="w-10 h-10 bg-amber-400 text-amber-900 rounded-full flex items-center justify-center font-bold mx-auto mb-3">1</div>
+              <p className="font-semibold text-gray-900 mb-2">Choisissez vos cartes</p>
+              <p className="text-sm text-gray-500">Recherchez la carte Pokemon que vous voulez surveiller parmi des milliers de cartes, toutes editions confondues.</p>
+            </div>
+            <div className="text-center">
+              <div className="w-10 h-10 bg-amber-400 text-amber-900 rounded-full flex items-center justify-center font-bold mx-auto mb-3">2</div>
+              <p className="font-semibold text-gray-900 mb-2">Definissez vos criteres</p>
+              <p className="text-sm text-gray-500">Prix maximum, etat minimum, langue de la carte et plateformes a surveiller (Vinted, eBay ou les deux).</p>
+            </div>
+            <div className="text-center">
+              <div className="w-10 h-10 bg-amber-400 text-amber-900 rounded-full flex items-center justify-center font-bold mx-auto mb-3">3</div>
+              <p className="font-semibold text-gray-900 mb-2">Recevez vos alertes</p>
+              <p className="text-sm text-gray-500">Des qu'une annonce correspond a vos criteres et est sous le prix Cardmarket, vous recevez un email avec le lien direct.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ALERTE EMAIL */}
+      <section className="py-16 px-8">
         <div className="max-w-lg mx-auto">
           <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">A quoi ressemble l'alerte</h2>
           <p className="text-center text-gray-500 mb-8">Un email clair, direct, avec tout ce qu'il faut pour decider vite.</p>
@@ -113,6 +145,31 @@ export default function Home() {
               <li>Vinted + eBay</li>
               <li>Score de deal Cardmarket</li>
             </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ SEO */}
+      <section className="py-16 px-8 bg-gray-50">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-10">Questions frequentes</h2>
+          <div className="space-y-6">
+            <div>
+              <p className="font-semibold text-gray-900 mb-1">PikaDeal surveille-t-il vraiment Vinted et eBay en temps reel ?</p>
+              <p className="text-sm text-gray-500">Oui, PikaDeal analyse regulierement les nouvelles annonces publiees sur Vinted et eBay correspondant aux cartes que vous surveillez, et compare automatiquement leur prix au marche Cardmarket.</p>
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 mb-1">Quelles cartes Pokemon puis-je surveiller ?</p>
+              <p className="text-sm text-gray-500">Toutes les cartes Pokemon, de la premiere edition Base Set aux sorties les plus recentes, en francais, anglais ou japonais.</p>
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 mb-1">Le plan gratuit suffit-il pour commencer ?</p>
+              <p className="text-sm text-gray-500">Oui, le plan gratuit permet de surveiller jusqu'a 5 cartes sur Vinted. Pour surveiller plus de cartes et acceder a eBay, l'abonnement Premium est disponible a 4.99 EUR par mois.</p>
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 mb-1">Puis-je resilier mon abonnement a tout moment ?</p>
+              <p className="text-sm text-gray-500">Oui, l'abonnement Premium peut etre resilie a tout moment depuis votre espace personnel, sans engagement.</p>
+            </div>
           </div>
         </div>
       </section>
